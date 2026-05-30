@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Rain on Me</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"></script>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        font-family: Helvetica, Arial, sans-serif;
+        min-height: 100dvh;
+        overflow-x: hidden;
+      }
+
+      #app {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      #top-bar {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      #city-input {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 12px;
+        font-size: 15px;
+        font-family: Helvetica, Arial, sans-serif;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      #fetch-btn {
+        padding: 10px 20px;
+        font-size: 15px;
+        font-family: Helvetica, Arial, sans-serif;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+        white-space: nowrap;
+        -webkit-appearance: none;
+      }
+
+      #suggestions {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        z-index: 100;
+        overflow: hidden;
+        display: none;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      }
+
+      .suggestion-item {
+        padding: 10px 14px;
+        font-size: 14px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .suggestion-item:last-child { border-bottom: none; }
+      .suggestion-item:hover { background: #f9f9f9; }
+
+      .suggestion-state {
+        font-size: 12px;
+        color: #aaa;
+      }
+
+      #status {
+        font-size: 13px;
+        color: #888;
+        margin: 0 0 8px 0;
+        width: 100%;
+        min-height: 18px;
+      }
+
+      #stats {
+        display: none;
+        flex-direction: row;
+        gap: 10px;
+        margin-bottom: 12px;
+        width: 100%;
+      }
+
+      .chip {
+        background: #f5f5f5;
+        border-radius: 8px;
+        padding: 8px 14px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .chip-label {
+        font-size: 11px;
+        color: #999;
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .chip-value {
+        font-size: 16px;
+        font-weight: 500;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #canvas-wrap {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      canvas {
+        display: block;
+        border-radius: 14px;
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="top-bar">
+        <input id="city-input" type="text" placeholder="Search a city in India…" autocomplete="off" />
+        <button id="fetch-btn">Rain</button>
+        <div id="suggestions"></div>
+      </div>
+      <p id="status">Search for an Indian city to start</p>
+      <div id="stats">
+        <div class="chip"><span class="chip-label">city</span><span class="chip-value" id="s-city">—</span></div>
+        <div class="chip"><span class="chip-label">temp</span><span class="chip-value" id="s-temp">—</span></div>
+        <div class="chip"><span class="chip-label">intensity</span><span class="chip-value" id="s-intensity">—</span></div>
+      </div>
+      <div id="canvas-wrap"></div>
+    </div>
+    <script src="sketch.js"></script>
+  </body>
+</html>
